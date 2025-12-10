@@ -44,8 +44,6 @@ logger.info(f"Results Directory: {RESULTS_DIR}")
 ########################################################################
 def load_and_prepare_data(data_path=None, test_size=0.30, random_state=42):
     """
-    Load and prepare data for modeling.
-    
     Args:
         data_path: Path to processed data CSV file
         test_size: Test set proportion
@@ -73,9 +71,7 @@ def load_and_prepare_data(data_path=None, test_size=0.30, random_state=42):
     y = np.log(y)
     
     # Train-test split
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=test_size, random_state=random_state
-    )
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=random_state)
     
     # Feature scaling
     scaler = StandardScaler()
@@ -94,8 +90,6 @@ def load_and_prepare_data(data_path=None, test_size=0.30, random_state=42):
 ########################################################################
 def evaluate_model(y_true, y_pred, model_name, cv_scores=None):
     """
-    Comprehensive model evaluation with multiple metrics
-    
     Args:
         y_true: True target values
         y_pred: Predicted target values
@@ -355,8 +349,6 @@ def apply_huber(X_train_scaled, X_test_scaled, y_train, y_test):
 ########################################################################
 def train_and_evaluate_models(X_train_scaled, X_test_scaled, y_train, y_test):
     """
-    Train and evaluate all models.
-    
     Returns:
         tuple: (results_df, models, y_pred_rf)
     """
@@ -375,8 +367,11 @@ def train_and_evaluate_models(X_train_scaled, X_test_scaled, y_train, y_test):
         results['Random Forest'], y_pred_rf, models['Random Forest'] = apply_random_forest(X_train_scaled, X_test_scaled, y_train, y_test)
         results['Gradient Boosting'], _, models['Gradient Boosting'] = apply_gradient_boosting(X_train_scaled, X_test_scaled, y_train, y_test)
         results['Extra Trees'], _, models['Extra Trees'] = apply_extra_trees(X_train_scaled, X_test_scaled, y_train, y_test)
+        #results['AdaBoost'], _, models['AdaBoost'] = apply_adaboost(X_train_scaled, X_test_scaled, y_train, y_test)
+        #results['SVR'], _, models['SVR'] = apply_svr(X_train_scaled, X_test_scaled, y_train, y_test)
         results['Huber'], _, models['Huber'] = apply_huber(X_train_scaled, X_test_scaled, y_train, y_test)
         logger.info("All models trained successfully.")
+    
     except Exception as e:
         logger.error(f"Error during model training: {str(e)}")
         raise
@@ -403,9 +398,7 @@ def train_and_evaluate_models(X_train_scaled, X_test_scaled, y_train, y_test):
 ########################################################################
 def analyze_and_visualize(X, models, results_df, y_test, y_pred_rf, best_model):
     """
-    Analyze feature importance and create visualizations.
-    
-    Args:
+   Args:
         X: Feature dataframe
         models: Dictionary of trained models
         results_df: Results dataframe
@@ -420,8 +413,7 @@ def analyze_and_visualize(X, models, results_df, y_test, y_pred_rf, best_model):
         
         # Random Forest feature importance
         rf_model = models['Random Forest']
-        rf_importance = pd.DataFrame(
-            rf_model.feature_importances_,
+        rf_importance = pd.DataFrame(rf_model.feature_importances_,
             index=X.columns,
             columns=['Importance']
         ).sort_values('Importance', ascending=False)
@@ -471,15 +463,12 @@ def analyze_and_visualize(X, models, results_df, y_test, y_pred_rf, best_model):
         results_df.to_csv(results_path)
         logger.info(f"\nResults saved to {results_path}")
         
-        logger.info("\n" + "="*60)
         logger.info("ANALYSIS & VISUALIZATION COMPLETE")
-        logger.info("="*60)
         
         return rf_importance
     except Exception as e:
         logger.error(f"Error during analysis and visualization: {str(e)}")
         raise
-
 
 ########################################################################
 #                       MAIN FUNCTION
@@ -501,20 +490,14 @@ def main(data_path=None, test_size=0.30, verbose=True):
         logger.info("="*60)
         
         # Data loading and preparation
-        X_train_scaled, X_test_scaled, y_train, y_test, scaler, X = load_and_prepare_data(
-            data_path=data_path, test_size=test_size
-        )
+        X_train_scaled, X_test_scaled, y_train, y_test, scaler, X = load_and_prepare_data(data_path=data_path, test_size=test_size)
         
         # Model training and evaluation
-        results_df, models, y_pred_rf = train_and_evaluate_models(
-            X_train_scaled, X_test_scaled, y_train, y_test
-        )
+        results_df, models, y_pred_rf = train_and_evaluate_models(X_train_scaled, X_test_scaled, y_train, y_test)
         
         # Analysis and visualization
         best_model = results_df.index[0]
-        rf_importance = analyze_and_visualize(
-            X, models, results_df, y_test, y_pred_rf, best_model
-        )
+        rf_importance = analyze_and_visualize(X, models, results_df, y_test, y_pred_rf, best_model)
         
         logger.info("\n" + "="*60)
         logger.info("MODELING COMPLETE - PIPELINE SUCCESSFUL")
