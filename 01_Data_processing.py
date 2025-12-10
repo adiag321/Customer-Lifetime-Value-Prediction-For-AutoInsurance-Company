@@ -11,15 +11,18 @@
 import pandas as pd
 import numpy as np
 import os
+from pathlib import Path
 import seaborn as sns
 import matplotlib.pyplot as plt
 import scipy.stats as stats
 import warnings
 warnings.filterwarnings("ignore")
 
-os.chdir(r'D:/OneDrive - Northeastern University/Jupyter Notebook/Data Science Projects/Customer-Lifetime-Value-Prediction')
+# Get project root directory (relative to this script)
+PROJECT_ROOT = Path(__file__).parent.resolve()
+DATA_DIR = PROJECT_ROOT / 'data'
 
-data=pd.read_csv("./data/AutoInsurance.csv")
+data=pd.read_csv(DATA_DIR / 'AutoInsurance.csv')
 data.head()
 
 ## Processing the data
