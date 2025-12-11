@@ -1,23 +1,132 @@
 # <p align = 'center'>Customer Lifetime Value Prediction For Auto Insurance Company</p>
 
 ### BUSINESS PROBLEM
-An Auto Insurance company in the USA is facing issues in retaining its customers and wants to advertise promotional offers for its loyal customers. They are considering Customer Lifetime Value CLV as a parameter for this purpose. Customer Lifetime Value represents a customer’s value to a company over a period of time. It’s a competitive market for insurance companies, and the insurance premium isn’t the only determining factor in a customer’s decisions. 
-
-CLV is a customer-centric metric, and a powerful base to build upon to retain valuable customers, increase revenue from less valuable customers, and improve the customer experience overall. Using CLV effectively can improve customer acquisition and customer retention, prevent churn, help the company to plan its marketing budget, measure the performance of their ads in more detail, and much more.
-
-##### GOAL
+An Auto Insurance company in the USA is facing issues in retaining its customers and wants to advertise promotional offers for its loyal customers. They are considering Customer Lifetime Value (CLV) as a parameter for this purpose. Customer Lifetime Value represents a customer’s value to a company over a period of time. It’s a competitive market for insurance companies, and the insurance premium isn’t the only determining factor in a customer’s decisions. 
 
 The objective of this project is to accurately predict the Customer Lifetime Value (CLV) for an Auto Insurance Company to support targeted marketing and customer retention strategies. The approach involved a comprehensive multi-stage data science workflow:
 
 ---
 ### DATA DESCRIPTION
-
 The dataset represents Customer lifetime value of an Auto Insurance Company in the United States, it includes over 24 features and 9134 records to analyze the lifetime value of Customer.
 The dataset was collected from kaggle - https://www.kaggle.com/datasets/ranja7/vehicle-insurance-customer-data
 
 ---
-### IMPLEMENTATION STEPS:
+### HIGHLIGHTS
+We have implemented **`GitHub Actions`** to automate the model training and evaluation process. This reduces manual effort and ensures consistent model performance across different envirnments.
 
+#### How GitHub Actions Work?
+1. Push changes to GitHub
+2. Workflow runs automatically
+3. Results available in **Actions** → **Artifacts**
+
+#### How can the workflow be triggered?
+* Push to main/develop  
+* Pull requests  
+* Weekly schedule (Sunday 2 AM)  
+* Manual trigger  
+
+#### Jobs
+```
+┌─ Data Processing ─→ Model Training ──┐
+│                                      │
+└─ Quality Checks ─────────────────────┴────→ Notifications ─→ Performance Tracking
+```
+#### GitHut Actions Workflow
+```
+├─ Data Processing (Job 1)
+│  └─ Load and process raw data
+│     └─ Create Processed_AutoInsurance.csv
+├─ Model Training (Job 2) [Depends on Job 1]
+│  ├─ Train all ML models
+│  ├─ Evaluate performance
+│  └─ Generate visualizations
+├─ Quality Checks (Job 3) [Parallel with Job 2]
+│  ├─ Black formatting check
+│  ├─ Flake8 linting
+│  └─ isort import sorting
+├─ Notifications (Job 4) [After Jobs 2 & 3]
+│  └─ Report success/failure
+└─ Performance Tracking (Job 5) [After Job 4, on success]
+   └─ Track model metrics over time
+```
+
+#### Artifacts Generated
+- Performance metrics saved to `results/model_results_summary.csv`
+- Evaluation Visualizations are saved to`results/model_comparison_visualization.png`
+- Performance tracking metrics are saved to `model_metrics.json`
+- Logs and error traces
+
+#### Quality Checklist
+- **Cross-platform** (Windows/Linux/Mac)
+- **CI/CD ready** (GitHub Actions compatible)
+-  **Modular** (import and test individual functions)
+-  **Testable** (90+ tests possible)
+- **Documented** (docstrings, type hints)
+- **Error-safe** (comprehensive error handling)
+- **Logged** (structured logging for debugging)
+- **Flexible** (CLI arguments for customization)
+
+---
+
+### CODE FILE STRUCTURE
+```
+Customer-Lifetime-Value-Prediction-For-AutoInsurance-Company/
+├─ Documentation/
+│  ├─ Implementation_Summary.md         ← Project Overview
+│  └─ GitHub_Actions_Guide.md           ← Setup guide
+├─ GitHub Actions/
+│  └─ .github/
+│     └─ workflows/
+│        └─ model_training.yml          ← GitHub Actions Workflow configuration
+├─ 01_Data_processing.py
+├─ 02_Data_Analysis.ipynb
+├─ 03_Modeling.py                       ← Refactored (MODIFIED)
+├─ Testing/
+│  └─ tests/
+│     └─ test_modeling.py               ← Unit tests
+├─ Data/
+│  ├─ AutoInsurance.csv
+│  └─ Processed_AutoInsurance.csv
+├─ Results/
+│  ├─ model_results_summary.csv
+│  └─ model_comparison_visualization.png
+└─ Configuration/
+   └─ requirements.txt
+```
+
+---
+### CODE EXECUTION STEPS
+
+1. **Verify the refactored code works locally**
+   ```bash
+   python 03_Modeling.py
+   ```
+
+2. **Run the tests**
+   ```bash
+   pytest tests/test_modeling.py -v
+   ```
+
+3. **Commit and push to GitHub**
+   ```bash
+   git add .
+   git commit -m "GitHub Actions integration"
+   git push origin main
+   ```
+
+4. **Watch the workflow run**
+   - Go to Actions tab in GitHub
+   - Click on the running workflow
+   - Monitor progress and download results
+
+5. **Customize as needed**
+   - Edit `.github/workflows/model_training.yml` for different schedule
+   - Update `requirements.txt` with exact versions
+   - Add secrets for sensitive data
+
+---
+
+### IMPLEMENTATION STEPS
 #### 1. Data Processing & Feature Engineering (01_Data_processing.py)
 - **Objective**: Clean raw data and prepare features for modeling
 - **Implementation Details**:
@@ -31,24 +140,29 @@ The dataset was collected from kaggle - https://www.kaggle.com/datasets/ranja7/v
 
 #### 2. Exploratory Data Analysis (02_Data_Analysis.ipynb)
 - **Objective**: Understand data distributions, relationships, and feature significance
+
 - **Analysis Performed**:
   - **Univariate Analysis**: Analyzed individual feature distributions
     ![CLV](/Images/CLV.png "Customer Lifetime Value")
     - CLV is heavily right skewed in the data
+
     ![location](/Images/location.png "Location")
     - Most of the customers are from the suburban region
     - Identified CLV as heavily right-skewed (skewness indicating non-normality)
     - Examined distributions of Income, Monthly Premium Auto, Total Claim Amount
+
   - **Bivariate Analysis**: Examined relationships between features and CLV
     ![Bivariate Analysis](/Images/bi.png "Bivariate Analysis of CLV and Monthly Premium")
     - CLV and Monthly premium auto have a positive correlation and there is a linear relationship between them.
     - Found positive linear correlation between CLV and Monthly Premium Auto
     - Discovered slight positive correlation with Total Claim Amount
+  
   - **Multivariate Analysis**: Correlation heatmap analysis
     ![Heatmap](/Images/Heatmap.png "Heatmap")
     - There is a positive correlation between CLV and the monthly premium auto
     - There is a slight positive correlation between the total claim amount and CLV.
     - Income shows weaker positive correlation
+  
   - **Statistical Significance Testing**:
     - Applied Shapiro-Wilk test: Confirmed CLV is not normally distributed (p < 0.05)
     - Used non-parametric tests due to non-normality:
@@ -59,6 +173,7 @@ The dataset was collected from kaggle - https://www.kaggle.com/datasets/ranja7/v
       - ✓ Renew Offer Type, Vehicle Class, Vehicle Size
       - ✓ Number of Open Complaints, Number of Policies
       - ✗ Response, Gender, State, Policy Type, Sales Channel (not significant)
+  
   - **OLS Regression Analysis**:
     - Applied Ordinary Least Squares regression on numerical features
     - Validated assumptions:
@@ -108,25 +223,20 @@ The dataset was collected from kaggle - https://www.kaggle.com/datasets/ranja7/v
 ---
 ### EVALUATION METRICS
 
-Multiple evaluation metrics were employed to comprehensively assess model performance:
-
 - **R² Score**: Proportion of variance explained (0-1 scale, higher is better)
+  - It captures overall variance explained but can be misleading with non-normal distributions
   - Best Model: 0.91 indicates 91% of CLV variance explained by features
+
 - **RMSE (Root Mean Squared Error)**: Average prediction error in log-CLV scale
+  - It penalizes large errors (important for avoiding extreme CLV mispredictions)
   - Best Model: 0.1956 (low values preferred)
-  - Penalizes large errors more heavily, useful for identifying outlier predictions
+
 - **MAE (Mean Absolute Error)**: Average absolute prediction error
   - Robust to outliers and easier to interpret
+  
 - **MAPE (Mean Absolute Percentage Error)**: Percentage error metric
   - Provides scale-independent performance assessment
   - Best Model: ~19% average error
-
-**Why Multiple Metrics?**
-- R² captures overall variance explained but can be misleading with non-normal distributions
-- RMSE penalizes large errors (important for avoiding extreme CLV mispredictions)
-- MAE provides robust alternative unaffected by outliers
-- MAPE enables comparison with percentage-based business metrics
-- Cross-validation scores (5-fold CV) ensure results generalize to unseen data
 
 ---
 ### MODEL PERFORMANCE COMPARISON
@@ -196,11 +306,6 @@ Multiple evaluation metrics were employed to comprehensively assess model perfor
    - Decision trees provide transparent prediction logic
    - Can trace prediction paths for explainability
 
-5. **Business Suitability**:
-   - Fast inference time for real-time customer CLV predictions
-   - Scalable to larger customer datasets
-   - Minimal data preprocessing requirements
-
 ---
 ### CONCLUSION & BUSINESS RECOMMENDATIONS
 
@@ -212,11 +317,6 @@ Multiple evaluation metrics were employed to comprehensively assess model perfor
    - **Total Claim Amount** - Historical claim behavior correlates with lifetime value
    - **Months Since Policy Inception** - Tenure matters; longer-standing customers have higher CLV
    - **Income** - Higher income customers tend to have higher CLV
-   - **Months Since Last Claim** - Recent claimants show different CLV patterns
-   - **Number of Open Complaints** - Unresolved issues negatively impact CLV
-   - **Employment Status (Employed)** - Employed customers show higher CLV
-   - **Renew Offer Type (Offer2)** - Specific renewal offers correlate with CLV
-   - **Coverage Type (Extended)** - Extended coverage customers have higher CLV
 
 2. **Surprisingly Insignificant Features** (tested but non-significant):
    - **Vehicle Type & Size** - Counterintuitively, vehicle characteristics don't predict CLV for an auto insurance company
