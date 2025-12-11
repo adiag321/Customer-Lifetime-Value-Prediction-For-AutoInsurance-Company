@@ -1,12 +1,10 @@
-# Problem Statement
-# Customer Lifetime Value represents a customer’s value to a company over a period of 
-# time. It’s a competitive market for insurance companies in 2019, and insurance 
-# premium isn’t the only determining factor in a customer’s decisions. CLV is a 
-# customer-centric metric, and a powerful base to build upon to retain valuable 
-# customers, increase revenue from less valuable customers, and improve the customer 
-# experience overall.
-# Auto Insurance company is facing issues in retaining its customers and wants to advertise promotional 
-# offers for its loyal customers. They are considering CLV as a parameter to classify loyal customers.
+## Problem Statement
+# Customer Lifetime Value represents a customer’s value to a company over a period of time. It’s a competitive market for insurance companies in 2019, 
+# and insurance premium isn’t the only determining factor in a customer’s decisions. CLV is a customer-centric metric, and a powerful base to build upon 
+# to retain valuable customers, increase revenue from less valuable customers, and improve the customer experience overall.
+##
+# Auto Insurance company is facing issues in retaining its customers and wants to advertise promotional offers for its loyal customers. 
+# They are considering CLV as a parameter to classify loyal customers.
 
 import pandas as pd
 import numpy as np
