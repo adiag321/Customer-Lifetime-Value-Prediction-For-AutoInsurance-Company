@@ -116,7 +116,15 @@ jobs:
       with:
         name: error-logs
         path: logs/
-```
+    
+      name: Performance Tracking
+      runs-on: ubuntu-latest
+      needs: model-training
+      if: success()
+      steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4   -> for checking out your repository so that workflow can access the file and data.
+  ```
 
 ---
 ### Installation & Setup
