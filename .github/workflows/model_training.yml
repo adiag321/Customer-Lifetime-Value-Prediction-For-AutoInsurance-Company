@@ -50,9 +50,9 @@ jobs:
         python -c "
         import pandas as pd
         data = pd.read_csv('./data/Processed_AutoInsurance.csv')
-        print(f'✓ Data shape: {data.shape}')
-        print(f'✓ Columns: {data.columns.tolist()[:5]}...')
-        print(f'✓ No missing values in CLV: {data[\"CLV\"].isnull().sum() == 0}')
+        print(f'Data shape: {data.shape}')
+        print(f'Columns: {data.columns.tolist()[:5]}...')
+        print(f'No missing values in CLV: {data[\"CLV\"].isnull().sum() == 0}')
         "
 
   model-training:
@@ -98,14 +98,14 @@ jobs:
         best_r2 = results.loc[best_model, 'R2']
         best_rmse = results.loc[best_model, 'RMSE']
         
-        print(f'\n✓ Best Model: {best_model}')
-        print(f'✓ R² Score: {best_r2:.6f}')
-        print(f'✓ RMSE: {best_rmse:.6f}')
+        print(f'\nBest Model: {best_model}')
+        print(f'R² Score: {best_r2:.6f}')
+        print(f'RMSE: {best_rmse:.6f}')
         
         if best_r2 >= 0.85:
-            print('✓ Performance meets quality threshold (R² >= 0.85)')
+            print('Performance meets quality threshold (R² >= 0.85)')
         else:
-            print('⚠ Warning: R² below threshold. Consider model review.')
+            print('Warning: R² below threshold. Consider model review.')
         "
     
     - name: Upload model results
@@ -123,11 +123,11 @@ jobs:
         echo "## Model Training Summary" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         if [ -f "./results/model_results_summary.csv" ]; then
-          echo "✓ Model training completed" >> $GITHUB_STEP_SUMMARY
-          echo "✓ Results saved to: \`results/model_results_summary.csv\`" >> $GITHUB_STEP_SUMMARY
-          echo "✓ Visualizations saved to: \`results/model_comparison_visualization.png\`" >> $GITHUB_STEP_SUMMARY
+          echo "Model training completed" >> $GITHUB_STEP_SUMMARY
+          echo "Results saved to: \`results/model_results_summary.csv\`" >> $GITHUB_STEP_SUMMARY
+          echo "Visualizations saved to: \`results/model_comparison_visualization.png\`" >> $GITHUB_STEP_SUMMARY
         else
-          echo "✗ Model training failed - results not found" >> $GITHUB_STEP_SUMMARY
+          echo "Model training failed - results not found" >> $GITHUB_STEP_SUMMARY
         fi
 
   quality-checks:
@@ -167,10 +167,10 @@ jobs:
     - name: Check workflow status
       run: |
         if [ "${{ needs.model-training.result }}" == "success" ]; then
-          echo "✅ Pipeline completed successfully!"
+          echo "Pipeline completed successfully!"
           exit 0
         else
-          echo "❌ Pipeline failed. Check logs for details."
+          echo "Pipeline failed. Check logs for details."
           exit 1
         fi
 
